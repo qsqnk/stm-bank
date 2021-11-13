@@ -2,31 +2,35 @@ package softwareTransactionalMemory.transactionVariable
 
 import kotlinx.atomicfu.*
 import softwareTransactionalMemory.transaction.*
-import softwareTransactionalMemory.transaction.TxStatus.*
 
-class TxVar<T>(initialValue: T) {
-    private val state = atomic(TxVarState(owner = rootTx,
-                                          oldValue = initialValue,
-                                          newValue = initialValue))
+class TxVar<T>(initialValue: T) : AbstractTxVar<T>() {
+    private val state = atomic(TxVarState(initialTx, initialValue, initialValue))
 
-    internal fun openIn(tx: Transaction, update: (T) -> T): T {
+    override fun readIn(tx: AbstractTransaction): T =
+        openIn(tx) { it }
+
+    override fun writeIn(tx: AbstractTransaction, value: T): T =
+        openIn(tx) { value }
+
+    @Suppress("UNCHECKED_CAST")
+    internal fun openIn(tx: AbstractTransaction, update: (T) -> T): T {
         while (true) {
             val currentState = state.value
-            val valueInTx = currentState.valueIn(tx, onActive = Transaction::abort)
+            val valueInTx = currentState.valueIn(tx, onActive = AbstractTransaction::abort)
 
-            if (valueInTx === ACTIVE) continue
+            if (valueInTx === TxStatus.ACTIVE) continue
 
             val updatedValue = update(valueInTx as T)
             val updatedState = TxVarState(tx, valueInTx, updatedValue)
 
             if (state.compareAndSet(currentState, updatedState)) {
-                if (tx.status == ABORTED) throw AbortException()
+                if (tx.status == TxStatus.ABORTED) throw AbortException()
                 return updatedValue
             }
         }
     }
 
     companion object {
-        private val rootTx = Transaction().apply { commit() }
+        private val initialTx = Transaction().apply { commit() }
     }
 }

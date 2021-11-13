@@ -1,19 +1,18 @@
 package softwareTransactionalMemory.transactionVariable
 
-import softwareTransactionalMemory.transaction.Transaction
-import softwareTransactionalMemory.transaction.TxStatus
+import softwareTransactionalMemory.transaction.*
 
 internal class TxVarState<T>(
-    internal val owner: Transaction,
-    internal val oldValue: T,
-    internal val newValue: T
+    private val owner: AbstractTransaction,
+    private val oldValue: T,
+    private val newValue: T
 ) {
-    internal fun valueIn(tx: Transaction, onActive: (Transaction) -> Unit): Any? = when (owner) {
+    internal fun valueIn(tx: AbstractTransaction, onActive: (AbstractTransaction) -> Unit): Any? = when (owner) {
         tx -> newValue
         else -> when (owner.status) {
             TxStatus.COMMITTED -> newValue
             TxStatus.ABORTED -> oldValue
-            TxStatus.ACTIVE -> onActive(owner).let { TxStatus.ACTIVE }
+            TxStatus.ACTIVE -> TxStatus.ACTIVE.also { onActive(owner) }
         }
     }
 }

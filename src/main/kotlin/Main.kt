@@ -1,6 +1,7 @@
 import softwareTransactionalMemory.atomic
 import softwareTransactionalMemory.transactionVariable.TxVar
 import kotlin.concurrent.thread
+import kotlin.contracts.contract
 
 class AtomicTest {
     val a = TxVar(1)
@@ -20,25 +21,23 @@ class AtomicTest {
         }
     }
 
-    fun start() {
+    fun check(): Boolean {
         val threads = listOf(
             thread(start = false) { moveAtoB() },
             thread(start = false) { moveBtoA() }
         )
 
-        threads.forEach { it.start() }
-        threads.forEach { it.join() }
-
-        atomic {
-            println(a.read())
-            println(b.read())
-        }
+        return atomic { a.read() == b.read() }
     }
 }
 
 fun main() {
 
-    AtomicTest().start()
+    val counter = TxVar(0)
 
+
+    println(atomic { counter.read() })
 
 }
+
+

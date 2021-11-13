@@ -1,11 +1,11 @@
 package softwareTransactionalMemory.transaction
 
-import softwareTransactionalMemory.transactionVariable.TxVar
+import softwareTransactionalMemory.transactionVariable.AbstractTxVar
 
 interface TxScope {
 
-    fun <T> TxVar<T>.read(): T
+    fun <T> AbstractTxVar<T>.read(): T
 
-    fun <T> TxVar<T>.write(value: T): T
+    fun <T> AbstractTxVar<T>.write(value: T): T
 
 }

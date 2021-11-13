@@ -12,6 +12,7 @@ fun <T> atomic(block: TxScope.() -> T): T {
 
             if (tx.commit()) return result
             else tx.abort()
+
         } catch (e: AbortException) {
             tx.abort()
         }
