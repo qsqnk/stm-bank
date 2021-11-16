@@ -8,7 +8,8 @@ buildscript {
 apply(plugin = "kotlinx-atomicfu")
 
 plugins {
-    kotlin("jvm") version "1.5.10"
+    kotlin("jvm") version "1.5.31"
+    kotlin("plugin.serialization") version "1.5.31"
     application
 }
 
@@ -20,6 +21,13 @@ repositories {
 }
 
 dependencies {
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.1")
+    implementation("io.ktor:ktor-serialization:1.6.5")
+    implementation("io.ktor:ktor-server-core:1.6.5")
+    implementation("io.ktor:ktor-server-netty:1.6.5")
+    implementation("ch.qos.logback:logback-classic:1.2.5")
+    implementation("io.ktor:ktor-auth:1.6.5")
+    implementation("io.ktor:ktor-locations:1.6.5")
     testImplementation(kotlin("test"))
 }
 
@@ -32,5 +40,5 @@ tasks.withType<KotlinCompile> {
 }
 
 application {
-    mainClass.set("MainKt")
+    mainClass.set("ApplicationKt")
 }
