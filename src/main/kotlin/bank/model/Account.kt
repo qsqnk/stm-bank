@@ -6,6 +6,6 @@ import softwareTransactionalMemory.transactionVariable.TxVar
 
 data class Account(
     val username: Username,
-    val password: Password,
+    val encryptedPassword: Password,
     val balance: TxVar<Long>
 )

@@ -7,11 +7,11 @@ import kotlin.test.assertContentEquals
 import kotlin.test.assertTrue
 
 /**
- * Represents simple bank system
+ * Represents simple bank model
  *
  */
 
-class STMTest {
+class STMBankModelTest {
     private val balances = IntArray(USERS) { (Random.nextInt(0, 1000)) }
     private val txVarBalances = Array(USERS) { i -> TxVar(balances[i]) }
 

@@ -1,24 +1,23 @@
 package softwareTransactionalMemory.transaction
 
 import kotlinx.atomicfu.atomic
-import softwareTransactionalMemory.transactionVariable.AbstractTxVar
+import softwareTransactionalMemory.transactionVariable.TxVar
 
-class Transaction : TxScope, AbstractTransaction() {
+class Transaction : TxScope {
     private val _status = atomic(TxStatus.ACTIVE)
 
-    override val status
+    internal val status
         get() = _status.value
 
-    override fun commit() =
+    fun commit() =
         _status.compareAndSet(TxStatus.ACTIVE, TxStatus.COMMITTED)
 
-    override fun abort() =
+    fun abort() =
         _status.compareAndSet(TxStatus.ACTIVE, TxStatus.ABORTED)
 
-    override fun <T> AbstractTxVar<T>.read(): T =
-        readIn(this@Transaction)
+    override fun <T> TxVar<T>.read(): T =
+        openIn(this@Transaction) { it }
 
-    override fun <T> AbstractTxVar<T>.write(value: T): T =
-        writeIn(this@Transaction, value)
-
+    override fun <T> TxVar<T>.write(value: T): T =
+        openIn(this@Transaction) { value }
 }

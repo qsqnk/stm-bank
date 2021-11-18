@@ -2,6 +2,7 @@ package bank.rest
 
 import bank.api.*
 import bank.model.Account
+import bank.utils.encrypted
 import io.ktor.application.*
 import io.ktor.auth.*
 import io.ktor.locations.*
@@ -13,44 +14,27 @@ import kotlinx.serialization.Serializable
 import softwareTransactionalMemory.transactionVariable.TxVar
 import java.util.concurrent.ConcurrentHashMap
 
-@Serializable
-data class CredentialsRequest(
-    val login: String,
-    val password: String
-)
-
-@Serializable
-data class AmountRequest(
-    val amount: Long
-)
-
-@Serializable
-data class TransferRequest(
-    val to: Username,
-    val amount: Long
-)
-
-fun Routing.registerRoute(db: ConcurrentHashMap<Username, Account>) {
-    post("/register") {
-        val (username, password) = call.receive<CredentialsRequest>()
+fun Routing.signUp(db: ConcurrentHashMap<Username, Account>) {
+    post("/signup") {
+        val (username, password) = call.receive<SignUpRequest>().also { println(it) }
         if (!db.containsKey(username)) {
             db[username] = Account(
                 username,
-                password,
+                password.encrypted(),
                 TxVar(0L)
             )
-            call.respondText { "User $username has been registred!" }
+            call.respondText { "User $username has been signed up!" }
         }
     }
 }
 
-fun Route.bankRoutes(bank: BankApi) {
+fun Route.bank(bank: BankApi) {
     get("bank/balance") {
         val username = getUsername() ?: return@get
         val transaction = GetBalance(
             username = username
         )
-        bank.processTransaction(transaction).also { call.respondText(it) }
+        bank.processTransaction(transaction).also { call.respond(it) }
     }
 
     post("bank/withdraw") {
@@ -60,7 +44,7 @@ fun Route.bankRoutes(bank: BankApi) {
             username = username,
             amount = amount
         )
-        bank.processTransaction(transaction).also { call.respondText(it) }
+        bank.processTransaction(transaction).also { call.respond(it) }
     }
 
     post("bank/topup") {
@@ -70,7 +54,7 @@ fun Route.bankRoutes(bank: BankApi) {
             username = username,
             amount = amount
         )
-        bank.processTransaction(transaction).also { call.respondText(it) }
+        bank.processTransaction(transaction).also { call.respond(it) }
     }
 
     post("bank/transfer") {
@@ -81,7 +65,7 @@ fun Route.bankRoutes(bank: BankApi) {
             to = to,
             amount = amount
         )
-        bank.processTransaction(transaction).also { call.respondText(it) }
+        bank.processTransaction(transaction).also { call.respond(it) }
     }
 }
 
