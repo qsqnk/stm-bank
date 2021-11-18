@@ -8,7 +8,6 @@ buildscript {
 apply(plugin = "kotlinx-atomicfu")
 
 plugins {
-    jacoco
     kotlin("jvm") version "1.5.31"
     kotlin("plugin.serialization") version "1.5.31"
     application
@@ -34,25 +33,7 @@ dependencies {
 }
 
 tasks.test {
-    finalizedBy(tasks.jacocoTestReport)
     useJUnitPlatform()
-}
-
-tasks.jacocoTestReport {
-    dependsOn(tasks.test)
-}
-
-jacoco {
-    toolVersion = "0.8.7"
-    reportsDirectory.set(layout.buildDirectory.dir("customJacocoReportDir"))
-}
-
-tasks.jacocoTestReport {
-    reports {
-        xml.required.set(false)
-        csv.required.set(false)
-        html.outputLocation.set(layout.buildDirectory.dir("jacocoHtml"))
-    }
 }
 
 tasks.withType<KotlinCompile> {

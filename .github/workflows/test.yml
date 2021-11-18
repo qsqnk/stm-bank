@@ -1,7 +1,9 @@
-name: Test with coverage
+name: Test
+
 on:
   push:
   pull_request:
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -21,18 +23,12 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle
-      - name: Run test
-        run: |
-          ./gradlew :clean :test
-      - name: JaCoCo Coverage Report
-        env:
-          report_path: build/jacoco/report.csv
-        run: |
-          awk -F"," '{ instructions += $4 + $5; covered += $5; branches += $6 + $7; branches_covered +=$7 } END { print "Instructions covered:", covered"/"instructions, "--", 100*covered/instructions"%"; print "Branches covered:", branches_covered"/"branches, "--", 100*branches_covered/branches"%" }' $report_path
+      - name: Test
+        run: ./gradlew :clean :test
       - uses: actions/upload-artifact@v2
         with:
-          name: test-and-coverage-reports
-          path: build/reports
+          name: test-reports
+          path: build/reports/tests
       - name: Cleanup Gradle Cache
         # Remove some files from the Gradle cache, so they aren't cached by GitHub Actions.
         # Restoring these files from a GitHub Actions cache might cause problems for future builds.
