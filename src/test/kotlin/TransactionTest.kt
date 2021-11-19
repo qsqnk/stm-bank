@@ -7,10 +7,25 @@ import kotlin.test.assertEquals
 
 class TransactionTest {
 
+    @Test
+    fun commitTest() {
+        val tx = Transaction()
+        tx.commit()
+        assertEquals(TxStatus.COMMITTED, tx.status)
+    }
+
+    @Test
+    fun abortTest() {
+        val tx = Transaction()
+        tx.abort()
+        assertEquals(TxStatus.ABORTED, tx.status)
+    }
+
+
     /**
-     * If tx1 want to interact with txVar and there are
+     * If tx want to interact with txVar and there are
      * no other transactions that want to interact with txVar
-     * tx1 will always be committed
+     * tx will always be committed
      *
      */
     @Test
