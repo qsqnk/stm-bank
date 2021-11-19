@@ -53,7 +53,7 @@ class BankServiceTest {
     @Test
     fun successfulTransfer() {
         bank.processTransaction(TopUp("user1", 100))
-        bank.processTransaction(TopUp("user2", 100))
+        bank.processTransaction(TopUp("user2", 0))
         bank.processTransaction(Transfer("user1", "user2", 30))
 
         val balanceUser1TxRes = bank.processTransaction(GetBalance("user1"))
