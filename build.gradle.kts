@@ -9,7 +9,9 @@ apply(plugin = "kotlinx-atomicfu")
 
 plugins {
     kotlin("jvm") version "1.5.31"
-    kotlin("plugin.serialization") version "1.5.31"
+    java
+    jacoco
+    kotlin("plugin.serialization") version "1.6.0"
     application
 }
 
@@ -32,12 +34,21 @@ dependencies {
     testImplementation(kotlin("test"))
 }
 
+tasks.withType<Test> {
+    jvmArgs( "--add-opens", "java.base/jdk.internal.misc=ALL-UNNAMED",
+        "--add-exports", "java.base/jdk.internal.util=ALL-UNNAMED")
+}
+
 tasks.test {
+    finalizedBy(tasks.jacocoTestReport)
     useJUnitPlatform()
 }
 
-tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "1.8"
+tasks.jacocoTestReport {
+    dependsOn(tasks.test)
+    reports {
+        csv.required.set(true)
+    }
 }
 
 application {

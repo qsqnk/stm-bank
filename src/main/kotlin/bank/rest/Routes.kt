@@ -5,7 +5,6 @@ import bank.model.Account
 import bank.utils.encrypted
 import io.ktor.application.*
 import io.ktor.auth.*
-import io.ktor.locations.*
 import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
