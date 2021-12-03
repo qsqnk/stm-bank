@@ -32,7 +32,6 @@ class BankServiceTest {
     fun successfulTopTup() {
         val tx = TopUp("user1", 100)
         val txRes = bank.process(tx)
-        println(txRes)
         assertEquals(
             TransactionResult(TransactionStatus.SUCCESSFUL, "Your balance is 100"),
             txRes
