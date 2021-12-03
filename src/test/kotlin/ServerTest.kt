@@ -146,7 +146,6 @@ class ServerTest {
         }
     }
 
-
     private fun Any.toJson() = Gson().toJson(this)
 
     private fun TestApplicationEngine.signUp(username: Username, password: Password) =

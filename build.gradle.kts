@@ -31,6 +31,7 @@ dependencies {
     implementation("io.ktor:ktor-auth:1.6.5")
     implementation("io.ktor:ktor-locations:1.6.5")
     testImplementation("io.ktor:ktor-server-test-host:1.6.5")
+    implementation("org.jetbrains.kotlinx:lincheck:2.14.1")
     testImplementation(kotlin("test"))
 }
 

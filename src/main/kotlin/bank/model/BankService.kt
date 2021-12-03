@@ -6,7 +6,7 @@ import java.util.concurrent.ConcurrentHashMap
 
 class BankService(private val db: ConcurrentHashMap<Username, Account>) : BankApi {
 
-    override fun processTransaction(transaction: BankTransaction): TransactionResult =
+    override fun process(transaction: BankTransaction): TransactionResult =
         when (transaction) {
             is GetBalance -> processGetBalance(transaction)
             is Withdraw -> processWithdraw(transaction)

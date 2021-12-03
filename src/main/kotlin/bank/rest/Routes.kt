@@ -33,7 +33,7 @@ fun Route.bank(bank: BankApi) {
         val transaction = GetBalance(
             username = username
         )
-        bank.processTransaction(transaction).also { call.respond(it) }
+        bank.process(transaction).also { call.respond(it) }
     }
 
     post("bank/withdraw") {
@@ -43,7 +43,7 @@ fun Route.bank(bank: BankApi) {
             username = username,
             amount = amount
         )
-        bank.processTransaction(transaction).also { call.respond(it) }
+        bank.process(transaction).also { call.respond(it) }
     }
 
     post("bank/topup") {
@@ -53,7 +53,7 @@ fun Route.bank(bank: BankApi) {
             username = username,
             amount = amount
         )
-        bank.processTransaction(transaction).also { call.respond(it) }
+        bank.process(transaction).also { call.respond(it) }
     }
 
     post("bank/transfer") {
@@ -64,7 +64,7 @@ fun Route.bank(bank: BankApi) {
             to = to,
             amount = amount
         )
-        bank.processTransaction(transaction).also { call.respond(it) }
+        bank.process(transaction).also { call.respond(it) }
     }
 }
 

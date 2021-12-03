@@ -31,7 +31,7 @@ class BankServiceTest {
     @Test
     fun successfulTopTup() {
         val tx = TopUp("user1", 100)
-        val txRes = bank.processTransaction(tx)
+        val txRes = bank.process(tx)
         println(txRes)
         assertEquals(
             TransactionResult(TransactionStatus.SUCCESSFUL, "Your balance is 100"),
@@ -41,9 +41,9 @@ class BankServiceTest {
 
     @Test
     fun successfulWithDraw() {
-        bank.processTransaction(TopUp("user1", 100))
+        bank.process(TopUp("user1", 100))
         val tx = Withdraw("user1", 30)
-        val txRes = bank.processTransaction(tx)
+        val txRes = bank.process(tx)
         assertEquals(
             TransactionResult(TransactionStatus.SUCCESSFUL, "Your balance is 70"),
             txRes
@@ -52,12 +52,12 @@ class BankServiceTest {
 
     @Test
     fun successfulTransfer() {
-        bank.processTransaction(TopUp("user1", 100))
-        bank.processTransaction(TopUp("user2", 0))
-        bank.processTransaction(Transfer("user1", "user2", 30))
+        bank.process(TopUp("user1", 100))
+        bank.process(TopUp("user2", 0))
+        bank.process(Transfer("user1", "user2", 30))
 
-        val balanceUser1TxRes = bank.processTransaction(GetBalance("user1"))
-        val balanceUser2TxRes = bank.processTransaction(GetBalance("user2"))
+        val balanceUser1TxRes = bank.process(GetBalance("user1"))
+        val balanceUser2TxRes = bank.process(GetBalance("user2"))
 
         assertEquals(
             TransactionResult(TransactionStatus.SUCCESSFUL, "Your balance is 70"),
@@ -73,7 +73,7 @@ class BankServiceTest {
     @Test
     fun unknownSenderTest() {
         val tx = Transfer("user5", "user1", 10)
-        val txRes = bank.processTransaction(tx)
+        val txRes = bank.process(tx)
         assertEquals(
             TransactionResult(TransactionStatus.UNSUCCESSFUL, "Unknown user user5!"),
             txRes
@@ -83,7 +83,7 @@ class BankServiceTest {
     @Test
     fun unknownReceiverTest() {
         val tx = Transfer("user1", "user5", 10)
-        val txRes = bank.processTransaction(tx)
+        val txRes = bank.process(tx)
         assertEquals(
             TransactionResult(TransactionStatus.UNSUCCESSFUL, "Unknown user user5!"),
             txRes
