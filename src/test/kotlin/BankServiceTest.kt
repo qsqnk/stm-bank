@@ -1,6 +1,5 @@
 import bank.api.*
-import bank.model.Account
-import bank.model.BankService
+import bank.model.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import softwareTransactionalMemory.transactionVariable.TxVar

@@ -6,15 +6,14 @@ import softwareTransactionalMemory.transaction.TxScope
 
 fun <T> atomic(block: TxScope.() -> T): T {
     while (true) {
-        val tx = Transaction()
-        try {
-            val result = tx.block()
-
-            if (tx.commit()) return result
-            else tx.abort()
-
-        } catch (e: AbortException) {
-            tx.abort()
+        with(Transaction()) {
+            try {
+                val result = block()
+                if (commit()) return result
+                else abort()
+            } catch (e: AbortException) {
+                abort()
+            }
         }
     }
 }

@@ -2,6 +2,7 @@ package bank.rest
 
 import bank.api.*
 import bank.model.Account
+import bank.model.*
 import bank.utils.encrypted
 import io.ktor.application.*
 import io.ktor.auth.*
@@ -9,7 +10,6 @@ import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
 import io.ktor.util.pipeline.*
-import kotlinx.serialization.Serializable
 import softwareTransactionalMemory.transactionVariable.TxVar
 import java.util.concurrent.ConcurrentHashMap
 

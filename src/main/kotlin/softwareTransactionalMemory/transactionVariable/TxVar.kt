@@ -12,7 +12,7 @@ class TxVar<T>(initialValue: T) {
             val currentState = state.value
             val valueInTx = currentState.valueIn(tx, onActive = Transaction::abort)
 
-            if (valueInTx === TxStatus.ACTIVE) continue
+            if (valueInTx == TxStatus.ACTIVE) continue
 
             val updatedValue = update(valueInTx as T)
             val updatedState = TxVarState(tx, valueInTx, updatedValue)

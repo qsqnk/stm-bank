@@ -1,4 +1,6 @@
-package bank.api
+package bank.model
+
+import bank.api.Username
 
 sealed interface BankTransaction
 

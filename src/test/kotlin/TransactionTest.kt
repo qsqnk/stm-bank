@@ -52,18 +52,21 @@ class TransactionTest {
         val tx2 = Transaction()
         val txVar = TxVar(0)
 
-        thread {
+        val t1 = thread {
             with(tx1) {
                 txVar.write(1)
                 Thread.sleep(3000)
             }
-        }.join()
+        }
 
-        thread {
+        val t2 = thread {
             with(tx2) {
                 txVar.write(2)
                 assertEquals(TxStatus.ABORTED, tx1.status)
             }
-        }.join()
+        }
+
+        t1.join()
+        t2.join()
     }
 }
